@@ -1,72 +1,32 @@
 const TelegramBot = require('node-telegram-bot-api');
 
+console.log('🔧 Початок запуску бота...');
+
 const token = process.env.BOT_TOKEN;
 
 if (!token) {
-    console.log('❌ BOT_TOKEN не знайдено!');
+    console.log('❌ ПОМИЛКА: BOT_TOKEN не знайдено!');
+    console.log('Перевірте змінну середовища BOT_TOKEN у Render');
     process.exit(1);
 }
 
-console.log('🤖 Бот запускається...');
-const bot = new TelegramBot(token, {polling: true});
+console.log('✅ Токен знайдено, запускаємо бота...');
 
-bot.onText(/\/start/, (msg) => {
-    const chatId = msg.chat.id;
-    bot.sendMessage(chatId, 
-        '🎲 Бот-рандомайзер готовий до роботи!\n\n' +
-        'Доступні команди:\n' +
-        '/random - Випадкове число 1-100\n' +
-        '/coin - Підкинути монетку\n' +
-        '/dice - Кости (1-6)\n' +
-        '/random10 - Число 1-10\n' +
-        '/custom - Ваш діапазон (наприклад: /custom 50-200)'
-    );
-});
-
-bot.onText(/\/random/, (msg) => {
-    const chatId = msg.chat.id;
-    const randomNum = Math.floor(Math.random() * 100) + 1;
-    bot.sendMessage(chatId, `🎲 Ваше випадкове число: **${randomNum}**`, {parse_mode: 'Markdown'});
-});
-
-bot.onText(/\/random10/, (msg) => {
-    const chatId = msg.chat.id;
-    const randomNum = Math.floor(Math.random() * 10) + 1;
-    bot.sendMessage(chatId, `🔢 Число від 1 до 10: **${randomNum}**`, {parse_mode: 'Markdown'});
-});
-
-bot.onText(/\/coin/, (msg) => {
-    const chatId = msg.chat.id;
-    const result = Math.random() > 0.5 ? 'Орел 🦅' : 'Решка 🪙';
-    bot.sendMessage(chatId, `💰 Монетка: **${result}**`, {parse_mode: 'Markdown'});
-});
-
-bot.onText(/\/dice/, (msg) => {
-    const chatId = msg.chat.id;
-    const dice = Math.floor(Math.random() * 6) + 1;
-    bot.sendMessage(chatId, `🎯 Кость: **${dice}**`, {parse_mode: 'Markdown'});
-});
-
-bot.onText(/\/custom (.+)/, (msg, match) => {
-    const chatId = msg.chat.id;
-    const range = match[1];
+try {
+    const bot = new TelegramBot(token, {polling: true});
     
-    try {
-        const [min, max] = range.split('-').map(Number);
-        if (min >= max) {
-            bot.sendMessage(chatId, '❌ Мінімальне число має бути менше за максимальне');
-            return;
-        }
-        
-        const randomNum = Math.floor(Math.random() * (max - min + 1)) + min;
-        bot.sendMessage(chatId, `🎲 Число від ${min} до ${max}: **${randomNum}**`, {parse_mode: 'Markdown'});
-    } catch (error) {
-        bot.sendMessage(chatId, '❌ Використовуйте формат: /custom 10-50');
-    }
-});
+    bot.onText(/\/start/, (msg) => {
+        const chatId = msg.chat.id;
+        bot.sendMessage(chatId, '🎉 Бот працює! Тест успішний!');
+    });
 
-bot.on('polling_error', (error) => {
-    console.log('Polling error:', error);
-});
-
-console.log('✅ Бот успішно запущений!');
+    console.log('🤖 Бот успішно запущений!');
+    
+    bot.on('polling_error', (error) => {
+        console.log('⚠️ Помилка polling:', error);
+    });
+    
+} catch (error) {
+    console.log('❌ Критична помилка:', error);
+    process.exit(1);
+}
