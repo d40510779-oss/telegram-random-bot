@@ -4,10 +4,11 @@
   "description": "Telegram Random Bot",
   "main": "bot.js",
   "scripts": {
-    "start": "node bot.js"
+    "start": "node bot.js",
+    "install-deps": "npm install node-telegram-bot-api"
   },
   "dependencies": {
-    "node-telegram-bot-api": "^0.61.0"
+    "node-telegram-bot-api": "latest"
   },
   "engines": {
     "node": ">=18.0.0"
